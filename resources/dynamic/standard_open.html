@@ -1,0 +1,41 @@
+﻿{%
+Dim caption
+Dim image
+Dim index
+Dim columnCounter
+Dim i
+Dim j
+Dim k
+Dim ar = CurrentQuestion.ParentLoop.AvailableResponses
+Dim inputName
+Dim inputValue
+Dim otherIDs = CurrentADC.PropValue("otherRID")
+Dim	otherIDarray = otherIDs.Split(",")
+Dim otherID
+
+For j = 1 To ar.Count 
+	inputName  = CurrentQuestion.ParentLoop.AvailableResponses[j].inputName()
+	inputValue  = CurrentQuestion.ParentLoop.AvailableResponses[j].InputValue()
+	caption     = CurrentQuestion.ParentLoop.AvailableResponses[j].Caption
+	image		= CurrentQuestion.ParentLoop.AvailableResponses.ResourceURL[j]
+	index		= CurrentQuestion.ParentLoop.AvailableResponses[j].index
+%}
+<div id="responseItem{%= j %}" class="responseItem" data-value="{%= inputValue %}" data-id="{%= j %}" data-index="{%= index %}">
+	{% IF image <> "" Then %}
+		<img src="{%= image %}" unselectable='on' onselectstart='return false;' onmousedown='return false;' />
+	{% EndIF %}
+	<span style="display:none;" class="response_text" unselectable='on' onselectstart='return false;' onmousedown='return false;'>{%:= caption %}</span>
+	<div style="clear:both"></div>
+	<div><input rows="1" class="otherText" data-id="{%= j %}"></input></div>
+	<div style="clear:both"></div>
+</div>
+{% Next %}
+<div style="clear:both"></div>
+{%
+ar = CurrentQuestion.ParentLoop.AvailableResponses
+
+For i = 1 To ar.Count 
+    inputName = CurrentQuestion.iteration(ar[i].Index).InputName()
+%}
+<input type="hidden" name="{%= inputName%}" id="{%= inputName%}" value="{%= CurrentQuestion.iteration(ar[i].Index).InputValue() %}" />
+{% Next %}
